@@ -64,7 +64,7 @@ public class TodoController {
 	@DeleteMapping("todo-delete")
 	public String todoDelete(@ModelAttribute Todo todo){
 		
-		todoRepository.delete(todo.getId());
+		todoService.delete(todo.getId());
 		return "redirect:/todo-list";
 	}
 		

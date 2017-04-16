@@ -27,7 +27,7 @@ public class UserLoader implements CommandLineRunner {
 		userRepository.save(new User("admin", "admin", "admin@a.com", RoleType.ROLE_ADMIN));
 		
 		
-		User user1 = new User("user1", "user1", "user1@a.com", RoleType.ROLE_USER);
+		User user1 = new User("user1", "user1", "csernozjom1@gmail.com", RoleType.ROLE_USER);
 		user1 = userRepository.save(user1);
 		userRepository.save(new User("user2", "user2", "user2@a.com", RoleType.ROLE_USER));
 		
