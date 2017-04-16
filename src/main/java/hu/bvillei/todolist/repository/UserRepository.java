@@ -6,4 +6,5 @@ import hu.bvillei.todolist.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+	public User findByUsername(String username);
 }

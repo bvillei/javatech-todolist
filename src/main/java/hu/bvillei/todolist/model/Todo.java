@@ -18,7 +18,7 @@ public class Todo {
 	@JoinColumn(referencedColumnName="id")
 	private User user;
 	
-	protected Todo(){}
+	public Todo(){}
 	public Todo(String task, User user){
 		this.task = task;
 		this.user = user;

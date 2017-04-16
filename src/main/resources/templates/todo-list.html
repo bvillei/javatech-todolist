@@ -6,8 +6,9 @@
     </head>
     <body>
         <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-        <ul><li th:each="task: ${tasks}" th:text="${task}"></li>
+        <ul><li th:each="todo: ${todos}" th:text="${todo.task}"></li>
         </ul>
+        <a th:href="@{/todo-edit}">New task</a>
         <form th:action="@{/logout}" method="post">
             <input type="submit" value="Sign Out"/>
         </form>

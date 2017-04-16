@@ -9,6 +9,6 @@ import hu.bvillei.todolist.model.Todo;
 
 public interface TodoRepository extends JpaRepository<Todo, Integer> {
 	
-	@Query("select t.task from Todo t where t.user.username=?1")
-	List<String> findTasksByUsername(String username);
+	@Query("select t from Todo t where t.user.username=?1")
+	List<Todo> findTodosByUsername(String username);
 }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Edit</title>
+    </head>
+    <body>
+        <h1>Todo Edit</h1>
+        <form th:object="${todo}" th:action="@{/todo-save}" method="post">
+        	<label for="task">task:</label>
+        	<input type="text" th:field="*{task}" id="task"/>
+            <input type="submit" value="Save"/>
+        </form>
+        <form th:action="@{/todo-delete}" method="post">
+            <input type="submit" value="Delete"/>
+        </form>
+        <a th:href="@{/todo-list}">Cancel</a>
+    </body>
+</html>
