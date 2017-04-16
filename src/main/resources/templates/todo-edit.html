@@ -6,13 +6,15 @@
     </head>
     <body>
         <h1>Todo Edit</h1>
-        <form th:object="${todo}" th:action="@{/todo-save}" method="post">
+        <form th:object="${todo}" th:action="@{/todo-save}" th:method="post">
+        	<input type="hidden" th:field="*{id}"/>
         	<label for="task">task:</label>
         	<input type="text" th:field="*{task}" id="task"/>
             <input type="submit" value="Save"/>
         </form>
-        <form th:action="@{/todo-delete}" method="post">
-            <input type="submit" value="Delete"/>
+        <form th:object="${todo}" th:action="@{/todo-delete}" th:method="delete">
+            <input type="hidden" th:field="*{id}"/>
+            <input th:if="*{id}" type="submit" value="Delete"/>
         </form>
         <a th:href="@{/todo-list}">Cancel</a>
     </body>

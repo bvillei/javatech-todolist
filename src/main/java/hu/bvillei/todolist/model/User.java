@@ -1,6 +1,8 @@
 package hu.bvillei.todolist.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,7 @@ public class User {
 	private String username;
 	private String password;
 	private String email;
+	@Enumerated(EnumType.STRING)
 	private RoleType role;
 	
 	protected User() {}

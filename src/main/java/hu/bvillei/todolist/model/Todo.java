@@ -14,7 +14,7 @@ public class Todo {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String task;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(referencedColumnName="id")
 	private User user;
 	

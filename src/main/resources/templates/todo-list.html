@@ -1,16 +1,31 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-    <head>
-        <title>Hello World!</title>
-    </head>
-    <body>
-        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-        <ul><li th:each="todo: ${todos}" th:text="${todo.task}"></li>
-        </ul>
-        <a th:href="@{/todo-edit}">New task</a>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form>
-    </body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>Hello World!</title>
+</head>
+<body>
+	<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Task</th>
+				<th sec:authorize="hasRole('ROLE_ADMIN')">Username</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="todo: ${todos}">
+				<td><a th:href="@{'/todo-edit/' + ${todo.id}}"
+					th:text="${todo.task}"></a></td>
+				<td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${todo.user.username}"></td>
+			</tr>
+		</tbody>
+
+	</table>
+	<a th:href="@{/todo-edit}">New task</a>
+	<form th:action="@{/logout}" method="post">
+		<input type="submit" value="Sign Out" />
+	</form>
+</body>
 </html>
