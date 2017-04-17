@@ -1,9 +1,13 @@
 package hu.bvillei.todolist.controller;
 
+import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import hu.bvillei.todolist.model.RoleType;
 import hu.bvillei.todolist.model.Todo;
 import hu.bvillei.todolist.repository.TodoRepository;
 import hu.bvillei.todolist.service.TodoService;
@@ -29,14 +32,7 @@ public class TodoController {
 
 	@GetMapping(path = {"/", "/todo-list"})
 	public String getTodos(Model model, Authentication auth) {
-		List<Todo> todos;
-		if (RoleType.ROLE_ADMIN.name().equals(auth.getAuthorities().iterator().next().getAuthority())) {
-			todos = todoRepository.findAll();
-		} else {
-			String username = auth.getName();
-			todos = todoRepository.findTodosByUsername(username);
-		}
-		model.addAttribute("todos", todos);
+		model.addAttribute("todos", todoService.getTodos(auth));
 		return "todo-list";
 	}
 	
@@ -67,5 +63,9 @@ public class TodoController {
 		todoService.delete(todo.getId());
 		return "redirect:/todo-list";
 	}
-		
+	
+	@GetMapping(path = "todo/excel-report", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity<Resource> getExcelReport() throws IOException {
+		return new ResponseEntity<Resource>(todoService.getExcelReport(), HttpStatus.OK);
+	}
 }
