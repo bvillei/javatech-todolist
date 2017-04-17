@@ -11,12 +11,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import hu.bvillei.todolist.model.RoleType;
 import hu.bvillei.todolist.model.Todo;
@@ -36,9 +31,12 @@ public class TodoServiceImpl implements TodoService {
 	@Autowired
 	private NotificationService notificationService;
 	
+	@Autowired
+	private AuthorizationService authService;
+	
 	@Override
-	public Todo save(String username, Todo todo) {
-		User user = userRepository.findByUsername(username);
+	public Todo save(Todo todo) {
+		User user = userRepository.findByUsername(authService.getLoggedInUsername());
 		todo.setUser(user);
 		return todoRepository.save(todo);
 	}
@@ -48,36 +46,44 @@ public class TodoServiceImpl implements TodoService {
 		Todo todo = todoRepository.findOne(todoId);
 		todoRepository.delete(todoId);
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String username = auth.getName();
-		String role = auth.getAuthorities().iterator().next().getAuthority();
-		
-		if (!username.equals(todo.getUser().getUsername()) && RoleType.ROLE_ADMIN.name().equals(role)) {
+		if (!authService.getLoggedInUsername().equals(todo.getUser().getUsername())
+				&& authService.hasRole(RoleType.ROLE_ADMIN)) {
 			notificationService.sendNotification(todo.getUser().getEmail(),
 					"Todo item deleted", "Task '" + todo.getTask() + "' has been deleted by admin.");
 		}
 	}
 	
 	@Override
-	public List<Todo> getTodos(Authentication auth) {
-		if (RoleType.ROLE_ADMIN.name().equals(auth.getAuthorities().iterator().next().getAuthority())) {
+	public List<Todo> getTodos() {
+		if (authService.hasRole(RoleType.ROLE_ADMIN)) {
 			return todoRepository.findAll();
 		} else {
-			String username = auth.getName();
+			String username = authService.getLoggedInUsername();
 			return todoRepository.findTodosByUsername(username);
 		}
 	}
 	
 	@Override
 	public Resource getExcelReport() throws IOException {
+		List<Todo> todos = getTodos();
+		File reportFile = new File("excel-report.xls");
 		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("Todo");
-		HSSFRow row = sheet.createRow(0);
-		Cell cell = row.createCell(0);
-		cell.setCellValue("blablabla");
-		File f = new File("excel-report.xls");
-		workbook.write(f);
-		workbook.close();
-		return new FileSystemResource(f);
+		try {
+			HSSFSheet sheet = workbook.createSheet("Todo");
+			int i = 0;
+			for (Todo todo : todos) {
+				HSSFRow row = sheet.createRow(i++);
+				Cell cell = row.createCell(0);
+				cell.setCellValue(todo.getTask());
+				if (authService.hasRole(RoleType.ROLE_ADMIN)) {
+					cell = row.createCell(1);
+					cell.setCellValue(todo.getUser().getUsername());
+				}
+			}
+			workbook.write(reportFile);
+			return new FileSystemResource(reportFile);
+		} finally {
+			workbook.close();
+		}
 	}
 }

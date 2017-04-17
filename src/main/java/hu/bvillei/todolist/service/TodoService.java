@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
-import org.springframework.security.core.Authentication;
 
 import hu.bvillei.todolist.model.Todo;
 
 public interface TodoService {
-	Todo save(String username, Todo todo);
+	Todo save(Todo todo);
 	void delete(Integer todoId);
-	List<Todo> getTodos(Authentication auth);
+	List<Todo> getTodos();
 	Resource getExcelReport() throws IOException;
 }
