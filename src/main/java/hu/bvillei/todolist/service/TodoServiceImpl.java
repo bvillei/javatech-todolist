@@ -46,10 +46,11 @@ public class TodoServiceImpl implements TodoService {
 		Todo todo = todoRepository.findOne(todoId);
 		todoRepository.delete(todoId);
 		
-		if (!authService.getLoggedInUsername().equals(todo.getUser().getUsername())
-				&& authService.hasRole(RoleType.ROLE_ADMIN)) {
+		String username = authService.getLoggedInUsername();
+		if (authService.hasRole(RoleType.ROLE_ADMIN) && 
+				!username.equals(todo.getUser().getUsername())) {
 			notificationService.sendNotification(todo.getUser().getEmail(),
-					"Todo item deleted", "Task '" + todo.getTask() + "' has been deleted by admin.");
+					"Todo item deleted", "Task '" + todo.getTask() + "' has been deleted by " + username + ".");
 		}
 	}
 	

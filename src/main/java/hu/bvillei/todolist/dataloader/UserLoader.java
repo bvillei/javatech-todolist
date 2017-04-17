@@ -26,12 +26,10 @@ public class UserLoader implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		userRepository.save(new User("admin", "admin", "admin@a.com", RoleType.ROLE_ADMIN));
 		
-		
 		User user1 = new User("user1", "user1", "user1@a.com", RoleType.ROLE_USER);
 		user1 = userRepository.save(user1);
 		userRepository.save(new User("user2", "user2", "user2@a.com", RoleType.ROLE_USER));
 		
-		//userRepository.findAll().stream().forEach(System.out::println);
 		for (User user : userRepository.findAll()) {
 			System.out.println(user);
 		}
