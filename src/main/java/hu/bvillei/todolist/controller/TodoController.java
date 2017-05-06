@@ -35,7 +35,7 @@ public class TodoController {
 	}
 	
 	@GetMapping("todo-edit")
-	public String todoNew(Model model, @PathVariable(required = false) Integer id){
+	public String todoNew(Model model){
 		model.addAttribute("todo", new Todo());
 		return "todo-edit";
 	}

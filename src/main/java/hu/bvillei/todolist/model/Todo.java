@@ -1,6 +1,5 @@
 package hu.bvillei.todolist.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,7 +13,7 @@ public class Todo {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String task;
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne
 	@JoinColumn(referencedColumnName="id")
 	private User user;
 	

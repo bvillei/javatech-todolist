@@ -1,7 +1,5 @@
 package hu.bvillei.todolist.dataloader;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -22,7 +20,6 @@ public class UserLoader implements CommandLineRunner {
 	private TodoRepository todoRepository;
 
 	@Override
-	@Transactional
 	public void run(String... args) throws Exception {
 		userRepository.save(new User("admin", "admin", "admin@a.com", RoleType.ROLE_ADMIN));
 		

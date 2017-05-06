@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -11,6 +13,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import hu.bvillei.todolist.model.RoleType;
@@ -21,6 +24,8 @@ import hu.bvillei.todolist.repository.UserRepository;
 
 @Service
 public class TodoServiceImpl implements TodoService {
+	
+	private final Log logger = LogFactory.getLog(TodoServiceImpl.class);
 
 	@Autowired
 	private UserRepository userRepository;
@@ -49,8 +54,12 @@ public class TodoServiceImpl implements TodoService {
 		String username = authService.getLoggedInUsername();
 		if (authService.hasRole(RoleType.ROLE_ADMIN) && 
 				!username.equals(todo.getUser().getUsername())) {
-			notificationService.sendNotification(todo.getUser().getEmail(),
-					"Todo item deleted", "Task '" + todo.getTask() + "' has been deleted by " + username + ".");
+			try {
+				notificationService.sendNotification(todo.getUser().getEmail(),
+						"Todo item deleted", "Task '" + todo.getTask() + "' has been deleted by " + username + ".");
+			} catch (MailException e) {
+				logger.error("Failed to send e-mail about task deletion.", e);
+			}
 		}
 	}
 	
