@@ -32,9 +32,9 @@
 		</tbody>
 
 	</table>
-	<a th:href="@{/todo-edit}" class="btn btn-primary">New task</a>
+	<a th:href="@{/todo-edit}" class="btn btn-primary" id="newTask">New task</a>
 	<a th:href="@{/todo/excel-report}" class="btn btn-primary">Export</a>
-	<form th:action="@{/logout}" method="post">
+	<form th:action="@{/logout}" method="post" id="logoutForm">
 		<input type="submit" class="btn btn-primary" value="Sign Out" />
 	</form>
 </body>

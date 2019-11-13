@@ -15,7 +15,7 @@
     </head>
     <body>
         <h1>Todo Edit</h1>
-        <form th:object="${todo}" th:action="@{/todo-save}" th:method="post">
+        <form th:object="${todo}" th:action="@{/todo-save}" th:method="post" id="editForm">
         	<input type="hidden" th:field="*{id}"/>
         	<label for="task">task:</label>
         	<input type="text" th:field="*{task}" id="task"/>
