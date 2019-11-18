@@ -35,4 +35,19 @@ public class TodoControllerTest {
     	this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
     	.andExpect(view().name("todo-list"));
     }
+    
+    @Test
+	@WithMockUser(username = "testuser", password = "testpass", authorities = "ROLE_USER")
+    public void shouldNavigateLoggedInUserToTodoEditPage() throws Exception {
+    	this.mockMvc.perform(get("/todo-edit/1")).andDo(print()).andExpect(status().isOk())
+    	.andExpect(view().name("todo-edit"));
+    }
+    
+    @Test
+	@WithMockUser(username = "testuser", password = "testpass", authorities = "ROLE_USER")
+    public void testExcelReport() throws Exception {
+    	this.mockMvc.perform(get("/todo/excel-report")).andDo(print()).andExpect(status().isOk())
+    	.andExpect(header().string("Content-Type", "application/vnd.ms-excel"));
+    }
+    
 }
